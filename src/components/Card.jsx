@@ -1,25 +1,33 @@
 import React from 'react';
-import './card.css';
-import { Link } from 'react-router-dom';
+import './Card.scss'
 
-export default function Card({max, min, name, img, onClose, id}){ //desctructuramos los valores en vez de usar solo props de card
-  // acá va tu código
-  return (
-      <div className='carta'>
-        <button onClick={onClose}>X</button>
-
-        <Link to={`/city/${id}`}>
-          <h4>{name}</h4>
-        </Link>
-        <div className='dentro'>  
-          <p>Min</p>
-          <p>{min}</p>
+export default function Card ({name, temp, description, feels_like, humidity, wind, id, img, onClose}) {
+    return (
+      <div className="card bg-transparent border-info px-0 my-2 border-dark mh-100 mw-100"  >
+        <div className='card-header bg-dark'>
+            <button onClick={onClose} className="btn-close btn-close-white"></button>
+            <p className="card-title">{name}</p>
         </div>
-        <div  className='dentro'>
-          <p>Max</p>
-          <p>{max}</p>
+        <div className="card-body ">
+          <img className="iconoClima" src={"http://openweathermap.org/img/wn/"+img+"@2x.png"} width="80" height="80" alt="" />
+          <div className="col">
+            <div>
+              <p>Temp: {temp}°C</p>
+            </div>
+            <div>
+              <p>Feels like: {feels_like}°C</p>
+            </div>
+            <div >
+              <p>Description: {description}</p>
+            </div>
+            <div >
+              <p>Humidity: {humidity}</p>
+            </div>
+            <div >
+              <p>Wind: {wind}M/S</p>
+            </div>
+          </div>
         </div>
-        <img src={`http://openweathermap.org/img/wn/${img}@2x.png`} alt={"img"}/>
       </div>
-    )
+    );
 };

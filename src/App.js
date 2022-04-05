@@ -1,75 +1,54 @@
-import React, { useState } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
-import './App.css';
+import React, {useState} from 'react'
+import axios from 'axios'
+import Searchbar from './components/Searchbar.jsx';
 import Cards from './components/Cards.jsx';
-import Nav from './components/Nav.jsx';
-import About from './components/About.jsx';
-import City from './components/City';
+import UseDate from './components/UseDate.jsx';
 
 function App() {
-
-  const {pathname, search} = useLocation()
-
-  const [cities, setCities] = useState([]);
-  const apiKey = '4ae2636d8dfbdc3044bede63951a019b';
-
-  function onSearch(city){
-    fetch(`http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`)// con el fetch estamos llamando a la api
-    .then(r => r.json())// este primer then es la respuesta del fetch que nombramos r y despues lo mapeamos usando json
-    .then(resource =>{ // es siguiente the es el resultado del r.json
-      if(resource.main !== undefined){// si no tengo main no se genero respuesta
-        const city = {
-          min: Math.round(resource.main.temp_min),
-          max: Math.round(resource.main.temp_max),
-          img: resource.weather[0].icon,
-          id: resource.id,
-          wind: resource.wind.speed,
-          temp: resource.main.temp,
-          name: resource.name,
-          weather: resource.weather[0].main,
-          clouds: resource.clouds.all,
-          latitud: resource.coord.lat,
-          longitud: resource.coord.lon
-        };
-        setCities(oldCities => [...oldCities, city]);
-        //setCities([...cities, city]);// seteo cities con una copia de todo lo que tenia cities mas la nueva city
-      }
-      else{
-        alert('ciudad no encontrada');
-      }
-    })
+  const [data, setData] = useState([])
+  function onClose(id) {
+    setData(oldData => oldData.filter(c => c.id !== id));
   }
+  // console.log(data)
+  
 
-  function onClose(id){// saca el card seleccionado donde se presiono el close
-    setCities(oldCities => oldCities.filter(c => c.id !== id))// evalua los id y se queda con todos los que son diferentes
+  // const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=3f587a1638de70e9fb2c0c486e133909`
+
+  function searchLocation (ciudad) {  
+      axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${ciudad}&appid=3f587a1638de70e9fb2c0c486e133909&units=metric`)
+      .then((response) =>{
+        // console.log(response.data)
+        if(response.data !== undefined){
+          const city ={
+            name: response.data.name,
+            temp:response.data.main.temp,
+            description: response.data.weather[0].description,
+            feels_like: response.data.main.feels_like,
+            humidity: response.data.main.humidity,
+            wind: response.data.wind.speed,
+            id: response.data.id,
+            img: response.data.weather[0].icon,
+          }
+          setData(oldData => [...oldData, city]);
+        }
+      })
   }
-
-  function onFilter(ciudadId) {
-    let ciudad = cities.filter(c => c.id === parseInt(ciudadId));
-    if(ciudad.length > 0) {
-        return ciudad[0];
-    } else {
-        return null;
-    }
-  }
-
   return (
-    <div className="App">
+    <div className="app">
       <div>
-        <Routes>
-          <Route pathname="/" element={()=><Nav onSearch={onSearch}/>}/>
-          <Route pathname="/" element={()=><Cards citites={cities} onClose={onClose}/>}/>
-          <Route pathname="/about">
-            <About/>
-          </Route>
-          <Route pathname="/city/:cityID" element={({match})=><City city={onFilter(match.params.cityID)}/>}/>
-        </Routes>    
-          <Cards
-            cities={cities} onClose={onClose}/*dentro del route va el nombre del componete en al linea del route*/
-            />
+        <h1>Weather Dashboard</h1>
+        <UseDate/>
       </div>
+      <div>
+        <Searchbar search={searchLocation}/>
+        <Cards
+          data={data}
+          onClose={onClose}
+          />
+      </div>
+      
     </div>
-  );
+  )
 }
 
 export default App;

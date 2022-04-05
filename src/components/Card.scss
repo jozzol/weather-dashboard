@@ -1,0 +1,26 @@
+
+
+
+@import "node_modules/bootstrap/scss/bootstrap.scss";
+
+
+.closecontainer{
+    justify-content: flex-end;
+    margin: 0;
+    background-color: red;
+}
+
+.btn-close{
+    position: relative;
+    float: right;
+}
+
+.card-header{
+    padding: 1em;
+    text-align: center;
+}
+
+.card {
+    margin-right: 0.5em;
+    margin-left: 0.5em;
+}
