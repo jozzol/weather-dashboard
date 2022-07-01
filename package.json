@@ -1,6 +1,6 @@
 {
   "homepage": "https://jozzol.github.io/weather-dashboard/",
-  "name": "your-app",
+  "name": "weather-dashboard",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
